@@ -1,16 +1,22 @@
 import os
 
-from flash_learning import create_app, db
+from sqlalchemy import exc
 
+from flash_learning import create_app, db
+from flash_learning.dummy_data import DummyData
 
 app = create_app()
 
 
 @app.before_first_request
 def create_tables():
-    from flash_learning.models.flashcard import Flashcard
-    from flash_learning.models.user import User
     db.create_all()
+
+    try:
+        dummy_data = DummyData()
+        dummy_data.populate_database()
+    except exc.IntegrityError:
+        db.session.rollback()
 
 
 if __name__ == "__main__":

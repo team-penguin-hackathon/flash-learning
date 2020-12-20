@@ -13,17 +13,46 @@
 
 <!-- Jinja2 Template Block for Body of Webpage -->
 {% block body %}
-<form method="post" id="signup">
-       {{ form.csrf_token }}
-    {{ form.username.label }}:{{ form.username() }}
-    <br>
-    {{ form.email.label }}:{{ form.email() }}
-    <br>
-    {{ form.password.label }}:{{ form.password() }}
-    <br>
-    {{ form.grade.label }}:{{ form.grade() }}
-    <br>
-    {{ form.school.label }}:{{ form.school() }}
-    <input type="submit" value="Submit" name="Submit">
+<form action="" method="post" id="signup" novalidate>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.first_name.label }}:{{ form.first_name() }}
+        {% for error in form.first_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.last_name.label }}:{{ form.last_name() }}
+        {% for error in form.last_name.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.username.label }}:{{ form.username() }}
+        {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.email.label }}:{{ form.email() }}
+        {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.password.label }}:{{ form.password() }}
+        {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.grade.label }}:{{ form.grade() }}
+        {% for error in form.grade.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.submit() }}
+    </p>
 </form>
 {% endblock %}

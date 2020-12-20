@@ -8,25 +8,25 @@
 
 <!-- Jinja2 Template Block for Body of Webpage -->
 {% block body %}
-    <form action="" method="post" id="login" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}:{{ form.username() }}<br>
-            {% for error in form.username.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}: {{ form.password() }}<br>
-            {% for error in form.password.errors %}
-                <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.submit() }}
-            {{ form.csrf_token }}
-            <input type="checkbox" id="remember" name="remember">
-            <label for="remember"> Remember Me</label><br>
-        </p>
-    </form>
+<form action="" method="post" id="login" novalidate>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.username.label }}: {{ form.username() }}<br>
+        {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.password.label }}: {{ form.password() }}<br>
+        {% for error in form.password.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ form.submit() }}
+        {{ form.csrf_token }}
+        <input type="checkbox" id="remember" name="remember">
+        <label for="remember"> Remember Me</label><br>
+    </p>
+</form>
 {% endblock %}
