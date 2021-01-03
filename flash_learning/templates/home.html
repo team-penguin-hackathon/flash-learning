@@ -77,7 +77,7 @@
 	</div>
     <div>
         {% if flashcard != None %}
-            <img src="http://localhost:5000/{{ flashcard.q_image }}" style="width:250px; height:auto;"/>
+            <img src="{{ url_for('static', filename=flashcard.q_image) }}" style="width:250px; height:auto;"/>
             <div>{{ flashcard.question }}</div>
         {% endif %}
     </div>

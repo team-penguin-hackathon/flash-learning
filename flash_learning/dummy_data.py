@@ -65,7 +65,7 @@ class DummyData:
                     for card in cards:
                         deck_id = db.session.query(Deck).filter(Deck.name == deck["name"],
                                                                 Deck.subject_id == subject_id).first().id
-                        card_img_dir = Path("/static/img/flashcards")
+                        card_img_dir = Path("/img/flashcards")
                         card_path = f"{card['grade']}/{card['subject']}/{card['deck']}/{card['q_image']}"
                         flashcard_path = card_img_dir / card_path
                         c = Flashcard(number=card["number"],
