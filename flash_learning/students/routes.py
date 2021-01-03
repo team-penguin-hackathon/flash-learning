@@ -75,10 +75,13 @@ def subject(username, subject):
     student = Student.query.filter_by(username=current_user.username).first()
     grade_id = db.session.query(Grade).filter(Grade.grade == student.grade).first().id
     subjects = Subject.query.filter_by(grade_id=grade_id).distinct()
-    subject_id = Subject.query.filter_by(grade_id=grade_id, name=subject).first().id
-    decks = Deck.query.filter_by(subject_id=subject_id).all()
+    if Subject.query.filter_by(grade_id=grade_id, name=subject).first() is not None:
+        subject_id = Subject.query.filter_by(grade_id=grade_id, name=subject).first().id
+        decks = Deck.query.filter_by(subject_id=subject_id).all()
+    else:
+        decks = list()
 
-    return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks, flashcard=None)
+    return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks, flashcard=None, curr_subject=subject)
 
 
 @login_required
@@ -93,9 +96,10 @@ def deck(username, subject, deck):
         deck_id = Deck.query.filter_by(subject_id=subject_id, name=deck).first().id
         flashcard = Flashcard.query.filter_by(deck_id=deck_id).first()
     else:
-        return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks, flashcard=None)
+        flashcard = Flashcard.query.filter_by(deck_id=1).first()
+        return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks, flashcard=flashcard, curr_subject=subject)
 
-    return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks, flashcard=flashcard)
+    return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks, flashcard=flashcard, curr_subject=subject)
 
 
 @login_required
