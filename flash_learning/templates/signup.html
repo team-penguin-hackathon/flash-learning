@@ -45,6 +45,9 @@
             <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
     </p>
+  {{ form.check_password.label }}:{{ form.check_password() }}
+
+
     <p>
         {{ form.grade.label }}:{{ form.grade() }}
         {% for error in form.grade.errors %}

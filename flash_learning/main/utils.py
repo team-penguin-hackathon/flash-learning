@@ -75,3 +75,6 @@ def check_password(form, field) -> None:
     # Password cannot contain the user's last name.
     if re.search(form.last_name.data, field.data, re.IGNORECASE) is not None:
         raise ValidationError("Password Can Not Last Name")
+    #Password should be confirmed
+    if form.check_password.data!=field.data:
+        raise ValidationError("Confirm Password Field Does Not Match")

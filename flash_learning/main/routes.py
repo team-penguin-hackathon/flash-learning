@@ -7,7 +7,7 @@ from flask_login import login_user, current_user, logout_user, login_required
 from flash_learning.email.utils import send_email
 from flash_learning.main.emailtask import create_confirmation_token
 from flash_learning.models.student import Student
-from flash_learning.main.forms import LoginForm, ResetForm, SignupForm
+from flash_learning.main.forms import LoginForm, SettingsForm, SignupForm
 from flash_learning import db
 
 main = Blueprint("main", __name__)
@@ -20,15 +20,14 @@ def index():
     return render_template("index.html")
 
 
-@main.route('/reset-password', methods=["GET", "POST"])
+@main.route('/settings', methods=["GET", "POST"])
 @login_required
-def reset():
+def settings():
     """"Student login page."""
 
     if not current_user.is_authenticated:
         return redirect(url_for("main.index"))
-
-    form = ResetForm()
+    form = SettingsForm()
 
     if form.validate_on_submit():
 
@@ -46,7 +45,7 @@ def reset():
 
         return render_template("index.html")
 
-    return render_template("reset.html", title="reset password", form=form, current_user=current_user)
+    return render_template("settings.html", title="reset password", form=form, current_user=current_user)
 
 
 @main.route('/login', methods=["GET", "POST"])
@@ -128,20 +127,22 @@ def signup():
     form = SignupForm()
 
     if form.validate_on_submit():
+        #set new Student parameters as None
         user = Student(first_name=form.first_name.data,
                        last_name=form.last_name.data,
                        username=form.username.data,
                        grade=form.grade.data,
                        email=form.email.data,
-                       password=form.password.data)
+                       password=form.password.data,
+                       points=None,
+                       flashcards_attempted=None,
+                       flashcards_correct=None)
 
-        alternative_id = b64encode(os.urandom(24)).decode('utf-8')
 
-        while Student.query.filter_by(alternative_id=alternative_id).first() is not None:
-            alternative_id = b64encode(os.urandom(24)).decode('utf-8')
+        while Student.query.filter_by(alternative_id=user.get_id()).first() is not None:
+            user.alternative_id = b64encode(os.urandom(24)).decode('utf-8')
 
         user.set_password(form.password.data)
-        user.alternative_id = alternative_id
         login_user(user, remember=False)
         token = create_confirmation_token(user.email)
         confirm_url = url_for('email.confirm_email', token=token, _external=True)

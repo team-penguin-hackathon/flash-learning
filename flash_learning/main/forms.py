@@ -10,8 +10,15 @@ class LoginForm(FlaskForm):
     password = PasswordField('password', validators=[DataRequired()])
     submit = SubmitField("Sign In")
 
+class ForgotPassword(FlaskForm):
+    email = StringField('email', validators=[DataRequired()])
+    submit = SubmitField("Submit")
 
-class ResetForm(FlaskForm):
+class ResetPassword(FlaskForm):
+    password = PasswordField('password', validators=[DataRequired(), check_password])
+    submit = SubmitField("Submit")
+
+class SettingsForm(FlaskForm):
     password = PasswordField('password', validators=[DataRequired()])
     new_password = PasswordField('new_password', validators=[DataRequired(), check_password])
     username = StringField('username', validators=[DataRequired()])
@@ -27,6 +34,8 @@ class SignupForm(FlaskForm):
     grade = IntegerField('grade', validators=[DataRequired()])
     email = StringField('email', validators=[DataRequired(), Email()])
     password = PasswordField('password', validators=[DataRequired(), check_password])
+    submit = SubmitField("Sign Up")
+    check_password = PasswordField('confirm password', validators=[DataRequired()])
     submit = SubmitField("Sign Up")
 
     def validate_username(self, username):
