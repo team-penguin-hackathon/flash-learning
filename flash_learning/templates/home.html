@@ -54,7 +54,7 @@
 
 						<!-- Iterate over decks and place each deck -->
 						{% for deck in decks %}
-                            <a href="{{ url_for("student.deck", username=current_user.username, subject="Arts", deck=deck.name) }}" class="list-group-item list-group-item-action">{{ deck.name }}</a>
+                            <a href="{{ url_for("student.deck", username=current_user.username, subject=curr_subject, deck=deck.name) }}" class="list-group-item list-group-item-action">{{ deck.name }}</a>
 						{% endfor %}
 
 					</div>
@@ -75,6 +75,12 @@
 			<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
 		</div>
 	</div>
+    <div>
+        {% if flashcard != None %}
+            <img src="{{ url_for('static', filename=flashcard.q_image) }}" style="width:250px; height:auto;"/>
+            <div>{{ flashcard.question }}</div>
+        {% endif %}
+    </div>
 
 	<!-- Flashcard -->
 	<div class="card-body">
@@ -97,8 +103,8 @@
 
 		<!-- Buttons for Flashcard Navigation -->
 		<div id="buttonArea">
-			<button type="button" class="btn btn-secondary">Next</button>
 			<button type="button" class="btn btn-secondary">Prev.</button>
+            <button type="button" class="btn btn-secondary">Next</button>
 		</div>
 	</div>
 	<div class="card-footer text-muted">

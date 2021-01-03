@@ -15,6 +15,9 @@ def create_tables() -> None:
     Populate the database with dummy data on initial app startup.
     """
 
+    if os.path.exists("flash_learning/site.db"):
+        return
+
     db.create_all()
 
     try:

@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 
 from flash_learning import db
 from flash_learning.models.flashcard import Grade, Subject, Flashcard, Deck
@@ -64,13 +65,13 @@ class DummyData:
                     for card in cards:
                         deck_id = db.session.query(Deck).filter(Deck.name == deck["name"],
                                                                 Deck.subject_id == subject_id).first().id
-                        image_path = os.path.join("flash_learning", "static", "img")
-                        card_path = os.path.join(card['grade'], card['subject'], card['deck'], card['q_image'])
-                        flashcard_path = os.path.join(image_path, card_path)
+                        card_img_dir = Path("/img/flashcards")
+                        card_path = f"{card['grade']}/{card['subject']}/{card['deck']}/{card['q_image']}"
+                        flashcard_path = card_img_dir / card_path
                         c = Flashcard(number=card["number"],
                                       question=card["question"],
                                       answer=card["answer"],
-                                      q_image=flashcard_path,
+                                      q_image=flashcard_path.as_posix(),
                                       deck_id=deck_id)
                         db.session.add(c)
                         db.session.commit()

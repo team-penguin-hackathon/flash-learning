@@ -2,7 +2,7 @@ from flask import Blueprint, render_template
 from flask_login import current_user, login_required
 
 from flash_learning import db
-from flash_learning.models.flashcard import Grade, Subject, Deck
+from flash_learning.models.flashcard import Grade, Subject, Deck, Flashcard
 from flash_learning.models.student import Student
 
 # dummy variable for total number of Flashcards
@@ -23,9 +23,10 @@ def home(username):
     decks = list()
     for subject in subjects:
         deck = Deck.query.filter_by(subject_id=subject.id).first()
-        decks.append(deck)
+        if deck is not None:
+            decks.append(deck)
 
-    return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks)
+    return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks, flashcard=None)
 
 
 @login_required
@@ -71,17 +72,34 @@ def leaderboard(username):
 @login_required
 @students.route("/student/<username>/<subject>", methods=["GET"])
 def subject(username, subject):
-    return f"""
-    <div>{subject}</div>
-    """
+    student = Student.query.filter_by(username=current_user.username).first()
+    grade_id = db.session.query(Grade).filter(Grade.grade == student.grade).first().id
+    subjects = Subject.query.filter_by(grade_id=grade_id).distinct()
+    if Subject.query.filter_by(grade_id=grade_id, name=subject).first() is not None:
+        subject_id = Subject.query.filter_by(grade_id=grade_id, name=subject).first().id
+        decks = Deck.query.filter_by(subject_id=subject_id).all()
+    else:
+        decks = list()
+
+    return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks, flashcard=None, curr_subject=subject)
 
 
 @login_required
 @students.route("/student/<username>/<subject>/<deck>", methods=["GET"])
 def deck(username, subject, deck):
-    return f"""
-    <div>{deck}</div>
-    """
+    student = Student.query.filter_by(username=current_user.username).first()
+    grade_id = db.session.query(Grade).filter(Grade.grade == student.grade).first().id
+    subjects = Subject.query.filter_by(grade_id=grade_id).distinct()
+    subject_id = Subject.query.filter_by(grade_id=grade_id, name=subject).first().id
+    decks = Deck.query.filter_by(subject_id=subject_id).all()
+    if Deck.query.filter_by(subject_id=subject_id, name=deck).first() is not None:
+        deck_id = Deck.query.filter_by(subject_id=subject_id, name=deck).first().id
+        flashcard = Flashcard.query.filter_by(deck_id=deck_id).first()
+    else:
+        flashcard = Flashcard.query.filter_by(deck_id=1).first()
+        return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks, flashcard=flashcard, curr_subject=subject)
+
+    return render_template("home.html", title="Home", user=student, subjects=subjects, decks=decks, flashcard=flashcard, curr_subject=subject)
 
 
 @login_required
