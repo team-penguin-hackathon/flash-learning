@@ -75,6 +75,13 @@
 			<div class="progress-bar" role="progressbar" style="width: 25%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">25%</div>
 		</div>
 	</div>
+    <div>
+        {% if flashcard != None or flashcard.question != "" %}
+            <img src="{{ flashcard.q_image }}"/>
+            <div>{{ flashcard.question }}</div>
+            <div>{{ flashcard.answer }}</div>
+        {% endif %}
+    </div>
 
 	<!-- Flashcard -->
 	<div class="card-body">
